@@ -9,7 +9,7 @@ module CorpPass
       entity_descriptor = Saml::Elements::EntityDescriptor.new(entity_id: entity_id)
       entity_descriptor.sp_sso_descriptor = make_sp_descriptor(acs, encryption_crt, signing_crt, slo)
 
-      if sign_document == true || sign_document == 'true'
+      if CorpPass::Util.string_to_boolean(sign_document)
         sign(entity_descriptor, signing_crt, signing_key)
       else
         entity_descriptor.to_xml
