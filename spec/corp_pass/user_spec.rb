@@ -86,7 +86,7 @@ RSpec.describe CorpPass::User do
         invalid = described_class.new('<invalid>fail')
         expect(invalid.send(:xml_valid?)).to be false
         expect(invalid.valid?).to be false
-        expect(invalid.errors).to include('Invalid XML Document: Premature end of data in tag invalid line 1')
+        expect(invalid.errors).to include(a_string_matching('Premature end of data in tag invalid line 1'))
       end
 
       it 'validates invalid roots correctly' do
@@ -102,8 +102,8 @@ RSpec.describe CorpPass::User do
         invalid = described_class.new(invalid_root)
         expect(invalid.send(:xsd_valid?)).to be false
         expect(invalid.valid?).to be false
-        expect(invalid.errors).to include("XSD Validation failed: Element 'invalid': "\
-                                          'No matching global declaration available for the validation root.')
+        expect(invalid.errors).to include(a_string_matching('No matching global declaration available ' \
+                                                            'for the validation root.'))
       end
 
       it 'validates entity status correctly' do
