@@ -27,5 +27,9 @@ Contributions are welcome.
 
 ## License
 
-Apache 2.0. See `LICENSE` for full text.
+This library is dual-licensed at your own pleasure, under
+
+- Apache 2.0
+- MIT
+
 © 2016 — 2018 Government Digital Services, Government Technology Agency (Singapore)
