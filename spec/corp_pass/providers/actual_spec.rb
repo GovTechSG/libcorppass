@@ -205,6 +205,16 @@ RSpec.describe CorpPass::Providers::Actual do
         expect(subject).to receive(:success!)
         subject.authenticate!
       end
+
+      it 'throws :warden if the user provided fails validation' do
+        expect(response.cp_user).to receive(:validate!) do
+          raise CorpPass::InvalidUser.new('', nil) # rubocop:disable Style/SignalException)
+        end
+        expect { subject.authenticate! }
+          .to throw_symbol(:warden,
+                           scope: CorpPass::WARDEN_SCOPE, type: :exception,
+                           exception: instance_of(CorpPass::InvalidUser))
+      end
     end
   end
 
@@ -246,7 +256,7 @@ RSpec.describe CorpPass::Providers::Actual do
                       request = Rack::Request.new(env)
                       if request[:SAMLRequest] # IdP initiated SLO
                         logout_request = CorpPass.parse_logout_request request
-                        if logout_request.name_id == env['warden'].user.name_id
+                        if logout_request.name_id == env['warden'].user.info.id
                           CorpPass.logout(env['warden'])
                           slo_url, _logout_response = CorpPass.slo_response_redirect(logout_request)
                           response = Rack::Response.new
@@ -265,7 +275,7 @@ RSpec.describe CorpPass::Providers::Actual do
                           CorpPass::Test::RackHelper::FAILURE_RESPONSE
                         end
                       else # Start SP initiated SLO
-                        url, logout_request = CorpPass.slo_request_redirect(env['warden'].user.name_id)
+                        url, logout_request = CorpPass.slo_request_redirect(env['warden'].user.info.id)
                         env['rack.session']['logout_id'] = logout_request._id
                         response = Rack::Response.new
                         response.redirect(url)
@@ -318,7 +328,7 @@ RSpec.describe CorpPass::Providers::Actual do
     end
 
     it 'performs a SP initiated SLO properly' do
-      user = CorpPass::Response.new(create(:saml_response))
+      user = create :corp_pass_user
       login_as(user)
       env = env_with_params('/slo')
       response = @app.call(env)
@@ -346,12 +356,12 @@ RSpec.describe CorpPass::Providers::Actual do
     end
 
     it 'performs an IdP initiated SLO properly' do
-      user = CorpPass::Response.new(create(:saml_response))
+      user = create :corp_pass_user
       login_as(user)
 
       destination = @sp.single_logout_service_url(Saml::ProtocolBinding::HTTP_REDIRECT)
       logout_request = Saml::LogoutRequest.new destination: destination,
-                                               name_id: user.name_id,
+                                               name_id: user.info.id,
                                                issuer: @idp_entity
       request_url = ::URI.parse(Saml::Bindings::HTTPRedirect.create_url(logout_request))
       env = env_with_params('/slo', CGI.parse(request_url.query))

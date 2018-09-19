@@ -2,24 +2,22 @@
 <AttributeValue>
   <AuthAccess>
     <Result_Set>
-      <ESrvc_Row_Count>1</ESrvc_Row_Count>
+      <ESrvc_Row_Count>3</ESrvc_Row_Count>
       <ESrvc_Result>
-        <CPESrvcID>Foobar</CPESrvcID>
+        <CPESrvcID>BGESRV1</CPESrvcID>
         <Auth_Result_Set>
-          <Row_Count>2</Row_Count>
+          <Row_Count>1</Row_Count>
           <Row>
-            <CPEntID_SUB>NULL</CPEntID_SUB>
-            <CPRole>Acceptor</CPRole>
+            <CPEntID_SUB>foobar</CPEntID_SUB>
+            <CPRole>NULL</CPRole>
             <StartDate>2016-01-15</StartDate>
             <EndDate>2016-02-15</EndDate>
           </Row>
           <Row>
             <CPEntID_SUB>foobar</CPEntID_SUB>
-            <CPRole>Viewer</CPRole>
-            <StartDate>2015-01-15</StartDate>
-            <EndDate>2017-02-15</EndDate>
-            <Parameter name="foo">bar</Parameter>
-            <Parameter name="lorem">ipsum</Parameter>
+            <CPRole>NULL</CPRole>
+            <StartDate>2016-03-15</StartDate>
+            <EndDate>2017-04-15</EndDate>
           </Row>
         </Auth_Result_Set>
       </ESrvc_Result>
@@ -33,7 +31,7 @@
     <CPSystemUID>CP192</CPSystemUID>
     <ISSPHOLDER>YES</ISSPHOLDER>
     <CPEntID>201000758R</CPEntID>
-    <CPEnt_Status>Registered</CPEnt_Status>
+    <CPEnt_Status>MIA</CPEnt_Status>
     <CPEnt_TYPE>UEN</CPEnt_TYPE>
     <CPNonUEN_RegNo>NULL</CPNonUEN_RegNo>
     <CPNonUEN_Country>NULL</CPNonUEN_Country>

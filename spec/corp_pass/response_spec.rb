@@ -13,19 +13,6 @@ RSpec.describe CorpPass::Response do
     CorpPass::Test::Config.reset_configuration!
   end
 
-  it 'should compare equality properly' do
-    response_one = CorpPass::Response.new(create(:saml_response))
-    response_two = CorpPass::Response.new(create(:saml_response))
-    expect(response_one).to eq(response_two)
-  end
-
-  it 'should serialize and deserialize properly' do
-    response = CorpPass::Response.new(create(:saml_response))
-    serialized = response.serialize
-    deserialized = CorpPass::Response.deserialize(serialized)
-    expect(deserialized).to eq(response)
-  end
-
   context 'Valid SAML Response' do
     subject do
       saml_response = create(:saml_response, :encrypt_id, :encrypt_assertion)
@@ -41,6 +28,7 @@ RSpec.describe CorpPass::Response do
     it { expect(subject.subject).to be_a(Saml::Elements::Subject) }
     it { expect(subject.name_id).to eq('S1234567A') }
     it { expect { subject.attribute_value }.to_not raise_error }
+    it { expect { subject.cp_user }.to_not raise_error }
     it 'decrypts the assertion successfully' do
       expect(subject.saml_response.encrypted_assertions).to be_empty
       expect(subject.assertion).to be_a(Saml::Assertion)
