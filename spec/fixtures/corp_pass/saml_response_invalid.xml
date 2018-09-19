@@ -38,7 +38,7 @@
       </saml:AuthnContext>
     </saml:AuthnStatement>
     <saml:AttributeStatement>
-      <saml:Attribute Name="Payload" NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri">
+      <saml:Attribute Name="AuthAccess" NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri">
         <saml:AttributeValue xsi:type="xs:string">Placeholder value -- will be filled in by the Factory</saml:AttributeValue>
       </saml:Attribute>
     </saml:AttributeStatement>
