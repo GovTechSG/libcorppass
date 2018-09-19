@@ -8,13 +8,11 @@ module CorpPass
     class Base
       include CorpPass::Notification
 
-      def initialize
-      end
+      def initialize; end
 
       # Override to perform any kinds of setup required
       # @abstract
-      def setup
-      end
+      def setup; end
 
       # Returns a URL to redirect to for IdP initiated SSO
       # @abstract

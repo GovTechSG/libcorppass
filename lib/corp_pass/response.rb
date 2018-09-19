@@ -122,7 +122,7 @@ module CorpPass
     end
 
     def validate_assertions
-      if assertions.nil? || assertions.empty?
+      if assertions.blank?
         fail MissingAssertionError.new, "Missing assertion in assertions SAML response: #{saml_response.to_xml}"
       end
     end

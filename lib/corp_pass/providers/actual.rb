@@ -129,7 +129,7 @@ module CorpPass
 
       def valid?
         notify(CorpPass::Events::STRATEGY_VALID,
-               super && !warden.authenticated?(CorpPass::WARDEN_SCOPE) && !params['SAMLart'].blank?)
+               super && !warden.authenticated?(CorpPass::WARDEN_SCOPE) && params['SAMLart'].present?)
       end
 
       # Authenticates the user against the artifact received in the SAML response.
