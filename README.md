@@ -1,21 +1,22 @@
 # libcorppass
-[![Build Status](https://travis-ci.org/govtechsg/libcorppass.svg?branch=master)](https://travis-ci.org/govtechsg/libcorppass)
+
+[![Build Status](https://travis-ci.org/GovTechSG/libcorppass.svg?branch=master)](https://travis-ci.org/GovTechSG/libcorppass)
 
 A wrapper around [libsaml](https://github.com/digidentity/libsaml) to perform authentication with CorpPass for Rack and Warden applications.
 
-[API reference](http://www.rubydoc.info/github/idagds/libcorppass/master/index)
+[API reference](http://www.rubydoc.info/github/GovTechSG/libcorppass/master/index)
 
-# Install
+## Install
 
 Add to your `Gemfile`:
 
-      gem 'libcorppass', git: 'https://github.com/idagds/libcorppass.git'
+      gem 'libcorppass', git: 'https://github.com/GovTechSG/libcorppass.git'
 
-# Usage
+## Usage
 
-Examples can be found at [libcorppass-examples](https://github.com/idagds/libcorppass-examples).
+Examples can be found at [libcorppass-examples](https://github.com/GovTechSG/libcorppass-examples).
 
-# Contributing
+## Contributing
 
 Contributions are welcome.
 
@@ -24,7 +25,7 @@ Contributions are welcome.
 3. Pass `rspec` and `rubocop`
 4. Submit a pull request
 
-# License
+## License
 
-LGPL. See `LICENSE` for full text.  
-&copy; 2016 Government Digital Services, Infocomm Development Authority of Singapore
+Apache 2.0. See `LICENSE` for full text.
+© 2016 — 2018 Government Digital Services, Government Technology Agency (Singapore)
