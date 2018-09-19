@@ -6,3 +6,6 @@ rvm:
 script:
   - bundle exec rspec
   - bundle exec rubocop
+branches:
+  only:
+    - master
