@@ -2,6 +2,11 @@ language: ruby
 rvm:
   - 2.2
   - 2.3.1
+  - 2.4.1
+  - 2.5.1
 script:
   - bundle exec rspec
   - bundle exec rubocop
+branches:
+  only:
+    - master

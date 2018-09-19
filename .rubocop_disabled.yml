@@ -17,25 +17,25 @@ Style/Documentation:
     - 'spec/**/*'
     - 'test/**/*'
 
-Style/FirstArrayElementLineBreak:
+Layout/FirstArrayElementLineBreak:
   Description: >-
                  Checks for a line break before the first element in a
                  multi-line array.
   Enabled: false
 
-Style/FirstHashElementLineBreak:
+Layout/FirstHashElementLineBreak:
   Description: >-
                  Checks for a line break before the first element in a
                  multi-line hash.
   Enabled: false
 
-Style/FirstMethodArgumentLineBreak:
+Layout/FirstMethodArgumentLineBreak:
   Description: >-
                  Checks for a line break before the first argument in a
                  multi-line method call.
   Enabled: false
 
-Style/FirstMethodParameterLineBreak:
+Layout/FirstMethodParameterLineBreak:
   Description: >-
                  Checks for a line break before the first parameter in a
                  multi-line method parameter definition.
@@ -72,14 +72,14 @@ Style/MissingElse:
     - case
     - both
 
-Style/MultilineArrayBraceLayout:
+Layout/MultilineArrayBraceLayout:
   Description: >-
                  Checks that the closing brace in an array literal is
                  symmetrical with respect to the opening brace and the
                  array elements.
   Enabled: false
 
-Style/MultilineAssignmentLayout:
+Layout/MultilineAssignmentLayout:
   Description: 'Check for a newline after the assignment operator in multi-line assignments.'
   StyleGuide: 'https://github.com/bbatsov/ruby-style-guide#indent-conditional-assignment'
   Enabled: false
@@ -141,4 +141,8 @@ Metrics/ClassLength:
 
 Metrics/ModuleLength:
   Description: 'Avoid modules longer than 100 lines of code.'
+  Enabled: false
+
+Metrics/BlockLength:
+  Description: 'This cop checks if the length of a block exceeds some maximum value.'
   Enabled: false

@@ -129,15 +129,22 @@ module CorpPass
 
       def valid?
         notify(CorpPass::Events::STRATEGY_VALID,
-               super && !warden.authenticated?(CorpPass::WARDEN_SCOPE) && !params['SAMLart'].blank?)
+               super && !warden.authenticated?(CorpPass::WARDEN_SCOPE) && params['SAMLart'].present?)
       end
 
       # Authenticates the user against the artifact received in the SAML response.
       def authenticate!
         response = resolve_artifact!(request)
-        notify(CorpPass::Events::AUTH_ACCESS, response.saml_response)
-        notify(CorpPass::Events::LOGIN_SUCCESS, "Logged in successfully #{response.name_id}")
-        success! response
+        user = response.cp_user
+        notify(CorpPass::Events::AUTH_ACCESS, user.xml)
+        begin
+          user.validate!
+        rescue CorpPass::InvalidUser => e
+          notify(CorpPass::Events::INVALID_USER, "User XML validation failed: #{e}\nXML Received was:\n#{e.xml}")
+          CorpPass::Util.throw_exception(e, CorpPass::WARDEN_SCOPE)
+        end
+        notify(CorpPass::Events::LOGIN_SUCCESS, "Logged in successfully #{user.info.id} -- 2FA: #{user.twofa?}")
+        success! user
       end
 
       # List of network exceptions. Artifact resolution is retried when one of these exceptions is

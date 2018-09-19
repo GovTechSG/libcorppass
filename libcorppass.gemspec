@@ -21,8 +21,8 @@ Gem::Specification.new do |spec|
   spec.required_ruby_version = '>=2.2.0'
 
   spec.add_development_dependency 'rake', '~> 10.0'
-  spec.add_development_dependency 'rubocop', '~> 0.38.0'
-  spec.add_development_dependency 'rspec', '~> 3.4.0'
+  spec.add_development_dependency 'rubocop', '~> 0.49.0'
+  spec.add_development_dependency 'rspec', '~> 3.8.0'
   spec.add_development_dependency 'factory_girl', '~> 4.5.0'
   spec.add_development_dependency 'webmock', '~> 1.24'
   spec.add_development_dependency 'actionpack', '~> 4.2'

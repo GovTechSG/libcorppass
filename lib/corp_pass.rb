@@ -22,6 +22,7 @@ module CorpPass
   require 'corp_pass/notification'
   require 'corp_pass/response'
   require 'corp_pass/config'
+  require 'corp_pass/user'
   require 'corp_pass/providers/actual'
   require 'corp_pass/providers/stub_logout'
 
@@ -66,7 +67,7 @@ module CorpPass
   end
 
   def self.read_yaml(file, environment)
-    yaml = YAML.load(ERB.new(File.read(file)).result)
+    yaml = YAML.safe_load(ERB.new(File.read(file)).result, [], [], true)
     yaml_config = yaml[environment] || yaml['default']
     fail 'Invalid CorpPass configuration file' unless yaml_config
     yaml_config

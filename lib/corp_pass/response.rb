@@ -1,17 +1,23 @@
 require 'saml'
 
 require 'corp_pass'
+require 'corp_pass/user'
 
 module CorpPass
   class MissingAssertionError < CorpPass::Error; end
 
   # Class representing a SAML response obtained after authentication
   #
-  # @attr saml_response [Saml::Response] The SAML response XML backing this object
+  # @attr saml_response [String] The SAML response XML backing this object
   # @attr errors [Array<String>] A list of CorpPass-specific validation errors.
   #                              Responses are validated on initialization.
   class Response
     include CorpPass::Notification
+
+    ATTRIBUTE_VALUE_NAME = 'AttributeValue'.freeze
+    USER_INFO_NAME = 'UserInfo'.freeze
+    AUTH_ACCESS_NAME = 'AuthAccess'.freeze
+    TP_AUTH_ACCESS_NAME = 'TPAuthAccess'.freeze
 
     TWOFA_AUTHN_CLASSREFS = [Saml::ClassRefs::MOBILE_TWO_FACTOR_UNREGISTERED,
                              Saml::ClassRefs::TIME_SYNC_TOKEN].freeze
@@ -67,7 +73,14 @@ module CorpPass
     #
     # @return [String]
     def attribute_value
-      Base64.decode64(attributes.first.attribute_values.first.content)
+      "<AttributeValue>#{Base64.decode64(attributes.first.attribute_values.first.content)}</AttributeValue>"
+    end
+
+    # Creates and returns the {CorpPass::User} for this SAML response.
+    #
+    # @return {CorpPass::User}
+    def cp_user
+      @cp_user ||= CorpPass::User.new(attribute_value, twofa: twofa?)
     end
 
     def authn_context_class_refs
@@ -79,23 +92,6 @@ module CorpPass
     def twofa?
       (authn_context_class_refs & TWOFA_AUTHN_CLASSREFS).any?
     end
-
-    # Returns the XML document backing this {Response}.
-    # @return [String] The SAML Response XML string
-    def serialize
-      saml_response.to_xml
-    end
-
-    # Deserializes a {User} from an XML document.
-    # @param [String] The SAML Response XML string
-    def self.deserialize(saml_response)
-      new(Saml::Response.parse(saml_response))
-    end
-
-    def ==(other)
-      other.class == self.class && other.saml_response.to_xml == saml_response.to_xml
-    end
-    alias eql? ==
 
     private
 
@@ -126,7 +122,7 @@ module CorpPass
     end
 
     def validate_assertions
-      if assertions.nil? || assertions.empty?
+      if assertions.blank?
         fail MissingAssertionError.new, "Missing assertion in assertions SAML response: #{saml_response.to_xml}"
       end
     end

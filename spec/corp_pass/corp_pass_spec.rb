@@ -112,14 +112,14 @@ RSpec.describe CorpPass do
     end
 
     it 'serializes and deserializes an object exactly' do
-      user = CorpPass::Response.new(create(:saml_response))
+      user = create :corp_pass_user
       serialized = CorpPass.serialize_user(user)
       deserialized = CorpPass.deserialize_user(serialized)
       expect(user).to eq(deserialized)
     end
 
     it 'sets up Rack to serialize and deserialize a user' do
-      user = CorpPass::Response.new(create(:saml_response))
+      user = create :corp_pass_user
       login_as(user)
       env = env_with_params
       setup_rack(CorpPass::Test::RackHelper::SUCCESS_APP).call(env)

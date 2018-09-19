@@ -6,6 +6,7 @@ module CorpPass
     PREFIX = /corp_pass\.(.+)/
 
     # Authentication
+    INVALID_USER = 'invalid_user'.freeze
     LOGIN_SUCCESS = 'login_success'.freeze
     LOGIN_FAILURE = 'login_failure'.freeze
     NETWORK_ERROR = 'network_error'.freeze
@@ -28,6 +29,9 @@ module CorpPass
     DECRYPTED_ID = 'decrypted_id'.freeze
     RESPONSE_VALIDATION_FAILURE = 'response_validation_failure'.freeze
 
+    # User
+    USER_VALIDATION_FAILURE = 'user_validation_failure'.freeze
+
     # Timeout
     SKIP_TIMEOUT_REFRESH = 'skip_timeout_refresh'.freeze
     INACTIVITY_TIMEOUT = 'inactivity_timeout'.freeze
@@ -38,8 +42,9 @@ module CorpPass
                           STRATEGY_VALID, AUTH_ACCESS, DECRYPTED_ASSERTION, DECRYPTED_ID, SKIP_TIMEOUT_REFRESH],
       ::Logger::INFO => [LOGIN_SUCCESS, INACTIVITY_TIMEOUT, SESSION_TIMEOUT],
       ::Logger::WARN => [RETRY_AUTHENTICATION],
-      ::Logger::ERROR => [LOGIN_FAILURE, NETWORK_ERROR, SAML_ERROR, ARTIFACT_RESOLUTION_FAILURE,
-                          RESPONSE_VALIDATION_FAILURE, SAML_RESPONSE_VALIDATION_FAILURE, MISSING_ASSERTION],
+      ::Logger::ERROR => [INVALID_USER, LOGIN_FAILURE, NETWORK_ERROR, SAML_ERROR, ARTIFACT_RESOLUTION_FAILURE,
+                          RESPONSE_VALIDATION_FAILURE, SAML_RESPONSE_VALIDATION_FAILURE, USER_VALIDATION_FAILURE,
+                          MISSING_ASSERTION],
       ::Logger::FATAL => []
     }.freeze
 

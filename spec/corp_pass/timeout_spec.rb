@@ -78,7 +78,7 @@ RSpec.describe CorpPass::Timeout do
       end
 
       @app = setup_rack(nil, mapping, [SkipMiddleware]).to_app
-      @user = CorpPass::Response.new(create(:saml_response))
+      @user = create :corp_pass_user
 
       CorpPass.configuration.timeout = 10
       CorpPass.configuration.session_max_lifetime = 12
