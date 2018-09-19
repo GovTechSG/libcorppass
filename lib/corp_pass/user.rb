@@ -147,6 +147,13 @@ module CorpPass
       @document ||= Nokogiri::XML(xml)
     end
 
+    # Returns the +Nokogiri::XML::Schema+ backing the user. The XSD is memoized.
+    # @return [Nokogiri::XML::Schema]
+    def xsd
+      # File I/O considered expensive
+      @xsd_memo ||= Nokogiri::XML::Schema(File.read(File.join(File.dirname(__FILE__), 'xml', 'AttributeValue.xsd')))
+    end
+
     # Returns the XML document backing this {User}.
     # @return [Array<String>] An array of [xml, twofa?] representing the serialized user
     def serialize
@@ -166,6 +173,7 @@ module CorpPass
     def valid?
       @errors = []
       return false unless xml_valid?
+      return false unless xsd_valid?
       valid_root?
       valid_entity_status?
       valid_eservice_results?
@@ -200,6 +208,17 @@ module CorpPass
       valid
     end
 
+    # Returns whether the XML backing this +User+ conforms to the expected AuthAccess XSD.
+    #
+    # Also adds any errors found in the XML to the instance variable +@errors+.
+    #
+    # @return [Boolean] Whether the XML validates against the expected AuthAccess XSD
+    def xsd_valid?
+      xsd_errors = xsd.validate(document)
+      @errors << "XSD Validation failed: #{xsd_errors.map(&:message).join('; ')}" unless xsd_errors.empty?
+      xsd_errors.empty?
+    end
+
     # Returns whether the XML backing this +User+ has a valid XML root element.
     #
     # Also adds any errors found in the XML to the instance variable +@errors+.
@@ -217,7 +236,6 @@ module CorpPass
     #
     # @return [Boolean]
     def valid_entity_status?
-      return false unless info
       valid = %w(Registered De-Registered Withdrawn).include?(info.entity_status)
       @errors << "Invalid Entity Status #{info.entity_status}" unless valid
       valid
@@ -226,7 +244,6 @@ module CorpPass
     # Sanity check: checks whether the given <Row_Count> for each e-service Auth_Result_Set
     # matches length of parsed output
     def valid_eservice_results?
-      return false unless eservices
       valid = eservices.map do |svc|
         valid_row_count = svc.auths.length == svc.given_auth_count
         unless valid_row_count

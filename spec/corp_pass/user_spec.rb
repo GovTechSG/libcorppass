@@ -97,6 +97,15 @@ RSpec.describe CorpPass::User do
         expect(invalid.valid?).to be false
       end
 
+      it 'validates the XSD correctly' do
+        invalid_root = '<?xml version="1.0" encoding="UTF-8"?> <invalid>fail</invalid>'
+        invalid = described_class.new(invalid_root)
+        expect(invalid.send(:xsd_valid?)).to be false
+        expect(invalid.valid?).to be false
+        expect(invalid.errors).to include("XSD Validation failed: Element 'invalid': "\
+                                          'No matching global declaration available for the validation root.')
+      end
+
       it 'validates entity status correctly' do
         expect(@invalid_user.send(:valid_entity_status?)).to be false
         expect(@invalid_user.errors).to include('Invalid Entity Status MIA')

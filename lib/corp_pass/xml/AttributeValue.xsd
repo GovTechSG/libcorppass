@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" attributeFormDefault="unqualified" elementFormDefault="qualified">
+  <xs:element name="AttributeValue">
+    <xs:complexType>
+      <xs:all>
+
+        <xs:element name="UserInfo">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element type="xs:string" name="CPAccType" maxOccurs="1" minOccurs="1" />
+              <xs:element type="xs:string" name="CPUID" maxOccurs="1" minOccurs="1" />
+              <xs:element type="xs:string" name="CPUID_Country" maxOccurs="1" minOccurs="1" />
+              <xs:element type="xs:string" name="CPUID_FullName" maxOccurs="1" minOccurs="1" />
+              <xs:element type="xs:string" name="CPSystemUID" maxOccurs="1" minOccurs="1" />
+              <xs:element type="xs:string" name="ISSPHOLDER" maxOccurs="1" minOccurs="1" />
+              <xs:element type="xs:string" name="CPEntID" maxOccurs="1" minOccurs="1" />
+              <xs:element type="xs:string" name="CPEnt_Status" maxOccurs="1" minOccurs="1" />
+              <xs:element type="xs:string" name="CPEnt_TYPE" maxOccurs="1" minOccurs="1" />
+              <xs:element type="xs:string" name="CPNonUEN_RegNo" maxOccurs="1" minOccurs="1" />
+              <xs:element type="xs:string" name="CPNonUEN_Country" maxOccurs="1" minOccurs="1" />
+              <xs:element type="xs:string" name="CPNonUEN_Name" maxOccurs="1" minOccurs="1" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+
+        <xs:element name="AuthAccess">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="Result_Set" maxOccurs="1" minOccurs="1">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element type="xs:int" name="ESrvc_Row_Count" maxOccurs="1" minOccurs="1" />
+                    <xs:element name="ESrvc_Result" maxOccurs="unbounded" minOccurs="1">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element type="xs:string" name="CPESrvcID" maxOccurs="1" minOccurs="1" />
+                          <xs:element name="Auth_Result_Set" maxOccurs="1" minOccurs="1">
+                            <xs:complexType>
+                              <xs:sequence>
+                                <xs:element type="xs:int" name="Row_Count" maxOccurs="1" minOccurs="1" />
+                                <xs:element name="Row" maxOccurs="unbounded" minOccurs="1">
+                                  <xs:complexType>
+                                    <xs:sequence>
+                                      <xs:element type="xs:string" name="CPEntID_SUB" maxOccurs="1" minOccurs="1" />
+                                      <xs:element type="xs:string" name="CPRole" maxOccurs="1" minOccurs="1" />
+                                      <xs:element type="xs:date" name="StartDate" maxOccurs="1" minOccurs="1" />
+                                      <xs:element type="xs:date" name="EndDate" maxOccurs="1" minOccurs="1" />
+                                      <xs:element name="Parameter" maxOccurs="8" minOccurs="0">
+                                        <xs:complexType>
+                                          <xs:simpleContent>
+                                            <xs:extension base="xs:string">
+                                              <xs:attribute type="xs:string" name="name" />
+                                            </xs:extension>
+                                          </xs:simpleContent>
+                                        </xs:complexType>
+                                      </xs:element>
+                                    </xs:sequence>
+                                  </xs:complexType>
+                                </xs:element>
+                              </xs:sequence>
+                            </xs:complexType>
+                          </xs:element>
+                        </xs:sequence>
+                      </xs:complexType>
+                    </xs:element>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+
+      </xs:all>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>
