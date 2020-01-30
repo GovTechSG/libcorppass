@@ -5,16 +5,35 @@ on: [push, pull_request]
 jobs:
   build:
 
-    runs-on: ubuntu-latest
     strategy:
       matrix:
-        ruby: [ '2.3', '2.4', 2.5' ]
+        ruby: [2.3.1,2.4.1,2.5.1]
+        os: [ubuntu-17.04,ubuntu-18.04]
+        exclude:
+          # based on https://rvm.io/binaries
+          - os: ubuntu-18.04
+            ruby: 2.3.1
+
+          - os: ubuntu-18.04
+            ruby: 2.4.1
+
+          - os: ubuntu-17.04
+            ruby: 2.5.1
+
+    runs-on: ${{ matrix.os }}
     steps:
     - uses: actions/checkout@v2
-    - name: Set up Ruby 2.6
-      uses: actions/setup-ruby@v1
-      with:
-        ruby-version:  ${{ matrix.ruby }}
+
+    - name: Set up RVM
+      run: |
+        curl -sSL https://get.rvm.io | bash
+
+    - name: Set up Ruby from .ruby-version
+      run: |
+        source $HOME/.rvm/scripts/rvm
+        rvm install ${{ matrix.ruby }} --binary
+        rvm --default use ${{ matrix.ruby }}
+
     - name: Build and test with rspec
       run: |
         gem install bundler
