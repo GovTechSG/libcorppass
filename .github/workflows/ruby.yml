@@ -5,11 +5,22 @@ on: [push, pull_request]
 jobs:
   build:
 
-    runs-on: ubuntu-latest
     strategy:
       matrix:
-        ruby: [ '2.3.1', '2.4.1', '2.5.1' ]
+        ruby: [2.3.1,2.4.1,2.5.1]
+        os: [ubuntu-17.04,ubuntu-18.04]
+        exclude:
+          # based on https://rvm.io/binaries
+          - os: ubuntu-18.04
+            ruby: 2.3.1
 
+          - os: ubuntu-18.04
+            ruby: 2.4.1
+
+          - os: ubuntu-17.04
+            ruby: 2.5.1
+
+    runs-on: ${{ matrix.os }}
     steps:
     - uses: actions/checkout@v2
 
