@@ -8,17 +8,8 @@ jobs:
     strategy:
       matrix:
         ruby: [2.3.1,2.4.1,2.5.1]
-        os: [ubuntu-17.04,ubuntu-18.04]
-        exclude:
-          # based on https://rvm.io/binaries
-          - os: ubuntu-18.04
-            ruby: 2.3.1
-
-          - os: ubuntu-18.04
-            ruby: 2.4.1
-
-          - os: ubuntu-17.04
-            ruby: 2.5.1
+        os: [ubuntu-16.04]
+      fail-fast: false
 
     runs-on: ${{ matrix.os }}
     steps:
@@ -37,6 +28,7 @@ jobs:
     - name: Build and test with rspec
       run: |
         source $HOME/.rvm/scripts/rvm
+        gem update --system
         gem install bundler
         bundle install --jobs 4 --retry 3
         bundle exec rspec
