@@ -1,6 +1,6 @@
 # libcorppass
 
-[![Build Status](https://travis-ci.org/GovTechSG/libcorppass.svg?branch=master)](https://travis-ci.org/GovTechSG/libcorppass)
+![Build Status](https://github.com/gdsace/libcorppass/workflows/Ruby/badge.svg?branch=master)
 
 A wrapper around [libsaml](https://github.com/digidentity/libsaml) to perform authentication with CorpPass for Rack and Warden applications.
 

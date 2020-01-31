@@ -1,0 +1,38 @@
+name: Ruby
+
+on: [push, pull_request]
+
+jobs:
+  build:
+
+    strategy:
+      matrix:
+        ruby: [2.3.1,2.4.1,2.5.1]
+        os: [ubuntu-16.04]
+
+    runs-on: ${{ matrix.os }}
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Set up RVM
+      run: |
+        curl -sSL https://get.rvm.io | bash
+
+    - name: Set up Ruby ${{ matrix.ruby }} + bundler
+      run: |
+        source $HOME/.rvm/scripts/rvm
+        rvm install ${{ matrix.ruby }} --binary
+        rvm --default use ${{ matrix.ruby }}
+        gem update --system
+        gem install bundler
+
+    - name: Build and test with rspec
+      run: |
+        source $HOME/.rvm/scripts/rvm
+        bundle install --jobs 4 --retry 3
+        bundle exec rspec
+        
+    - name: Build and test with rubocop
+      run: |
+        source $HOME/.rvm/scripts/rvm
+        bundle exec rubocop
