@@ -86,7 +86,7 @@ RSpec.describe CorpPass::User do
         invalid = described_class.new('<invalid>fail')
         expect(invalid.send(:xml_valid?)).to be false
         expect(invalid.valid?).to be false
-        expect(invalid.errors).to include(a_string_matching('Premature end of data in tag invalid line 1'))
+        expect(invalid.errors).to include(a_string_matching("1:14: FATAL: EndTag: '</' not found"))
       end
 
       it 'validates invalid roots correctly' do
