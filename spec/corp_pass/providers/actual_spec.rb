@@ -72,6 +72,16 @@ RSpec.describe CorpPass::Providers::Actual do
         _, slo_response = subject.slo_response_redirect request
         expect(slo_response.in_response_to).to eq(request._id)
       end
+
+      it 'logs masked nric when logging the SLO response in corp pass logs' do
+        destination = Saml.provider(sp_entity).single_logout_service_url(Saml::ProtocolBinding::HTTP_REDIRECT)
+        request = Saml::LogoutRequest.new(name_id: 'S1234567A',
+                                          destination: destination,
+                                          issuer: idp_entity)
+        slo_request = NricHelper.mask_nric_slo_request(request)
+        doc = Nokogiri::XML(slo_request)
+        expect(NricHelper.mask_nric(doc.at_xpath('//saml:NameID').content)).to eql('XXXXX567A')
+      end
     end
   end
 
@@ -214,6 +224,33 @@ RSpec.describe CorpPass::Providers::Actual do
           .to throw_symbol(:warden,
                            scope: CorpPass::WARDEN_SCOPE, type: :exception,
                            exception: instance_of(CorpPass::InvalidUser))
+      end
+
+      it 'masks nric when logging "Logged in successfully #{mask_nric(user.info.id)}" ' do
+        expect(subject).to receive(:success!)
+        subject.authenticate!
+        expect(NricHelper.mask_nric(response.cp_user.info.id)).to eql('XXXXX567A')
+      end
+
+      it 'masks nric when logging user xml in authenticate method' do
+        expect(subject).to receive(:success!)
+        subject.authenticate!
+        user_xml = NricHelper.mask_xml_nric(response.cp_user.xml)
+        doc = Nokogiri::XML(user_xml)
+        expect(NricHelper.mask_nric(doc.at_xpath('//CPUID').content)).to eql('XXXXX567A')
+      end
+
+      it 'masks nric in user xml, when logging invalid user xml' do
+        expect(response.cp_user).to receive(:validate!) do
+          raise CorpPass::InvalidUser.new('', nil) # rubocop:disable Style/SignalException)
+        end
+        expect { subject.authenticate! }
+          .to throw_symbol(:warden,
+                           scope: CorpPass::WARDEN_SCOPE, type: :exception,
+                           exception: instance_of(CorpPass::InvalidUser))
+        user_xml = NricHelper.mask_xml_nric(response.cp_user.xml)
+        doc = Nokogiri::XML(user_xml)
+        expect(NricHelper.mask_nric(doc.at_xpath('//CPUID').content)).to eql('XXXXX567A')
       end
     end
   end

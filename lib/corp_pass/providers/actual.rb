@@ -1,6 +1,7 @@
 require 'saml'
 require 'corp_pass/providers/base'
 require 'corp_pass/response'
+require 'corp_pass/nric_helper'
 
 module CorpPass
   module Providers
@@ -72,7 +73,8 @@ module CorpPass
         destination = binding == :redirect ? slo_url_redirect : slo_url_soap
         slo_request = Saml::LogoutRequest.new destination: destination,
                                               name_id: name_id
-        notify(CorpPass::Events::SLO_REQUEST, slo_request.to_xml)
+        copy_slo_request = slo_request.deep_dup
+        notify(CorpPass::Events::SLO_REQUEST, NricHelper.mask_nric_slo_request(copy_slo_request))
         slo_request
       end
 
@@ -133,17 +135,23 @@ module CorpPass
       end
 
       # Authenticates the user against the artifact received in the SAML response.
-      def authenticate!
+      def authenticate! # rubocop:disable Metrics/AbcSize
         response = resolve_artifact!(request)
         user = response.cp_user
-        notify(CorpPass::Events::AUTH_ACCESS, user.xml)
+        copy_user = user.deep_dup
+        user_xml = NricHelper.mask_xml_nric(copy_user.xml)
+        notify(CorpPass::Events::AUTH_ACCESS, user_xml)
         begin
           user.validate!
         rescue CorpPass::InvalidUser => e
-          notify(CorpPass::Events::INVALID_USER, "User XML validation failed: #{e}\nXML Received was:\n#{e.xml}")
+          copy_e = e.deep_dup
+          invalid_user_xml = NricHelper.mask_xml_nric(copy_e.xml)
+          notify(CorpPass::Events::INVALID_USER, "User XML validation failed: #{e}\nXML
+                                                  Received was:\n#{invalid_user_xml}")
           CorpPass::Util.throw_exception(e, CorpPass::WARDEN_SCOPE)
         end
-        notify(CorpPass::Events::LOGIN_SUCCESS, "Logged in successfully #{user.info.id} -- 2FA: #{user.twofa?}")
+        notify(CorpPass::Events::LOGIN_SUCCESS, "Logged in successfully #{NricHelper.mask_nric(user.info.id)}
+                                                 -- 2FA: #{user.twofa?}")
         success! user
       end
 
