@@ -2,7 +2,6 @@ require 'saml'
 require 'corp_pass/providers/base'
 require 'corp_pass/response'
 require 'corp_pass/nric_helper'
-
 module CorpPass
   module Providers
     # A concrete implementation of an actual CorpPass provider.
