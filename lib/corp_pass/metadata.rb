@@ -24,10 +24,7 @@ module CorpPass
 
     def self.verify_signature(signed_xml, signing_certificate)
       signed_document = Xmldsig::SignedDocument.new(signed_xml)
-      signed_document.validate do |signature, data, signature_algorithm|
-        signing_certificate.public_key.verify(digest_method(signature_algorithm).new,
-                                              signature, data)
-      end
+      signed_document.validate(signing_certificate, Xmldsig::XSD_X509_SERIAL_FIX_FILE)
     end
 
     def self.digest_method(signature_algorithm)
